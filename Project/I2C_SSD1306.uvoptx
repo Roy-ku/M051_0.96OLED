@@ -147,31 +147,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-<<<<<<< HEAD
           <LineNumber>179</LineNumber>
           <EnabledFlag>1</EnabledFlag>
           <Address>2276</Address>
-=======
-          <LineNumber>47</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>4020</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\USER\main.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\Template\../USER/main.c\47</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>234</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>1910</Address>
->>>>>>> 035e24e (master)
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -180,11 +158,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>..\HARDWARE\OLED_SSD1306_Config.c</Filename>
           <ExecCommand></ExecCommand>
-<<<<<<< HEAD
           <Expression>\\Template\../HARDWARE/OLED_SSD1306_Config.c\179</Expression>
-=======
-          <Expression>\\Template\../HARDWARE/OLED_SSD1306_Config.c\234</Expression>
->>>>>>> 035e24e (master)
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -213,19 +187,6 @@
           <WinNumber>1</WinNumber>
           <ItemText>u8length</ItemText>
         </Ww>
-<<<<<<< HEAD
-=======
-        <Ww>
-          <count>5</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>ScreenBuffer</ItemText>
-        </Ww>
-        <Ww>
-          <count>6</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>p</ItemText>
-        </Ww>
->>>>>>> 035e24e (master)
       </WatchWindow1>
       <Tracepoint>
         <THDelay>0</THDelay>
@@ -541,9 +502,8 @@
   </Group>
 
   <Group>
-<<<<<<< HEAD
     <GroupName>Readme</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -562,7 +522,7 @@
     <File>
       <GroupNumber>6</GroupNumber>
       <FileNumber>21</FileNumber>
-      <FileType>9</FileType>
+      <FileType>5</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
@@ -574,8 +534,6 @@
   </Group>
 
   <Group>
-=======
->>>>>>> 035e24e (master)
     <GroupName>::CMSIS</GroupName>
     <tvExp>0</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
