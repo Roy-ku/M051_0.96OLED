@@ -46,7 +46,7 @@ void SSD1306_SetPos(unsigned char x, unsigned char y)
  * @brief 顯示字串
  * @param x x座標
  * @param y y座標
- * @param ch 要顯示的字串
+ * @param ch 需顯示的字串
  * @param textsize 字體大小
  */
 void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char textsize)
@@ -116,7 +116,14 @@ void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char 
     }
 }
 
-/*顯示數字 ps.從右至左*/
+/**
+ * @brief 顯示數字
+ * @param x x座標
+ * @param y y座標
+ * @param num 需顯示的數字
+ * @param TextSize 字體大小
+ * @note  從右至左
+ */
 void SSD1306_ShowNum(unsigned char x, unsigned char y, unsigned int num, unsigned char TextSize)
 {
     unsigned char c = 0, i = 0;
@@ -184,11 +191,16 @@ void SSD1306_ShowNum(unsigned char x, unsigned char y, unsigned int num, unsigne
     }
 }
 
-/*****************************
-說明:	顯示BMP位圖
-參數:	x0,y0 -- 起始點坐標(x0:0~127, y0:0~7); x1,y1 -- 起點對角線(結束點)的坐標(x1:1~128,y1:1~ 8)
-回傳:	無
-******************************/
+/**
+ * @brief 顯示BMP位圖
+ * @param x0 起點座標x0
+ * @param y0 起點座標y0
+ * @param x1 結束座標x1
+ * @param y1 結束座標y1
+ * @param BMP 點陣圖形
+ * @note  x0,y0 -- 起始點坐標(x0:0~127, y0:0~7)
+ *        x1,y1 -- 起點對角線(結束點)的坐標(x1:1~128,y1:1~ 8)
+ */
 void SSD1306_DrawBMP(unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1, unsigned char BMP[])
 {
     unsigned char x, y;
@@ -208,7 +220,10 @@ void SSD1306_DrawBMP(unsigned char x0, unsigned char y0, unsigned char x1, unsig
     }
 }
 
-/*螢幕填充*/
+/**
+ * @brief 螢幕填充
+ * @param BMP 點陣圖形
+ */
 void SSD1306_FILL(unsigned char BMP[])
 {
     unsigned char i, j;
@@ -228,7 +243,9 @@ void SSD1306_FILL(unsigned char BMP[])
     }
 }
 
-/*螢幕清空*/
+/**
+ * @brief 螢幕清空
+ */
 void SSD1306_Clear(void)
 {
 
@@ -273,7 +290,7 @@ void SSD1306_Clear(void)
     //  SW_IIC_WaitAck();
     //  SW_IIC_Write_Byte(0x40);
     //  SW_IIC_WaitAck();
-    //  for (unsigned int n = 0; n < 128 * 9; n++)
+    //  for (unsigned int n = 0; n < 128 * 9; n++)//原始*8 會被吃掉一的PAGE
     //  {
     //  		if( n%128 ==0)
     //  		{
@@ -286,7 +303,11 @@ void SSD1306_Clear(void)
     // SW_IIC_Stop();
 }
 
-/*清空Page*/
+/**
+ * @brief 清空Page
+ * @param page 一個Page
+ * @note page: 0~7
+ */
 void SSD1306_Clear_Page(unsigned char page)
 {
     unsigned char page_address_pos;

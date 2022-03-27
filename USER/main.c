@@ -64,7 +64,7 @@ int main(void)
 	// SSD1306_Clear_Page(2, SSD1306_TextSize_F8X16);
 	SSD1306_Clear();
 	uint16_t count = strlen(CPU);
-	SSD1306_ShowStr(0, 4, "233331", SSD1306_TextSize_F6x8);
+	SSD1306_ShowStr(0, 4, "Ver.002", SSD1306_TextSize_F6x8);
 	SSD1306_ShowStr(64, 2, "0", SSD1306_TextSize_F8X16);
 	while (1)
 	{

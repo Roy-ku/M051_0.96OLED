@@ -36,7 +36,6 @@
 
 #elif (SCREEN_TYPE == SSD1306_128x64)
 
-#define OLED_12864
 #define SCREEN_PAGE_NUM (8)
 #define SCREEN_PAGEDATA_NUM (128)
 #define SCREEN_COLUMN (128)
