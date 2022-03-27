@@ -60,7 +60,7 @@ void SSD1306_Init(void)
     // CLK_SysTickDelay(10);
 }
 
-/*初始化引腳與Oledlib做相容*/
+/*初始化引腳*/
 #if (TRANSFER_METHOD == HW_IIC)
 
 void IIC_Configuration(void)

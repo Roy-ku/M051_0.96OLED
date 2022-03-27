@@ -42,14 +42,20 @@ void SSD1306_SetPos(unsigned char x, unsigned char y)
     SSD1306_Write_Cmd((x & 0x0F) | 0x00);
 }
 
-/*顯示字串*/
-void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char TextSize)
+/**
+ * @brief 顯示字串
+ * @param x x座標
+ * @param y y座標
+ * @param ch 要顯示的字串
+ * @param textsize 字體大小
+ */
+void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char textsize)
 {
     unsigned char c = 0, i = 0, j = 0;
 
-    switch (TextSize)
+    switch (textsize)
     {
-    case 1:
+    case SSD1306_TextSize_F6x8:
     {
         while (ch[j] != '\0')
         {
@@ -70,7 +76,7 @@ void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char 
     }
     break;
 
-    case 2:
+    case SSD1306_TextSize_F8X16:
     {
         while (ch[j] != '\0')
         {
@@ -226,26 +232,26 @@ void SSD1306_Clear(void)
         SSD1306_Write_Cmd(0x00);     //設置顯示位置—列低地址
         SSD1306_Write_Cmd(0x10);     //設置顯示位置—列高地址
 
-        #define MODE (1)
-        #if (MODE == 1)
+#define MODE (1)
+#if (MODE == 1)
 
-                for (unsigned char j = 0; j < 128; j++)
-                {
-                    SSD1306_Write_Data(0x00);
-                }
-        #elif (MODE == 2)
-                SW_IIC_Start();
-                SW_IIC_Write_Byte(SSD1306_ADDRESS);
-                SW_IIC_WaitAck();
-                SW_IIC_Write_Byte(0x40);
-                SW_IIC_WaitAck();
-                for (unsigned char n = 0; n < SCREEN_PAGEDATA_NUM; n++)
-                {
-                    SW_IIC_Write_Byte(0x00);
-                    SW_IIC_WaitAck();
-                }
-                SW_IIC_Stop();
-        #endif
+        for (unsigned char j = 0; j < 128; j++)
+        {
+            SSD1306_Write_Data(0x00);
+        }
+#elif (MODE == 2)
+        SW_IIC_Start();
+        SW_IIC_Write_Byte(SSD1306_ADDRESS);
+        SW_IIC_WaitAck();
+        SW_IIC_Write_Byte(0x40);
+        SW_IIC_WaitAck();
+        for (unsigned char n = 0; n < SCREEN_PAGEDATA_NUM; n++)
+        {
+            SW_IIC_Write_Byte(0x00);
+            SW_IIC_WaitAck();
+        }
+        SW_IIC_Stop();
+#endif
     }
 
     // unsigned char *p;
