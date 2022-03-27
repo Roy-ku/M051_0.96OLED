@@ -1,6 +1,5 @@
 #include "OLED_SSD1306_Config.h"
 #include "Font.h"
-unsigned char SSD1306_Type;
 
 // unsigned char ScreenBuffer[SCREEN_PAGE_NUM][SCREEN_COLUMN] = {0};
 
@@ -31,7 +30,11 @@ void SSD1306_Write_Data(unsigned char data)
 
 #endif
 
-/*設置起始座標*/
+/**
+ * @brief 設置起始座標
+ * @param x x座標
+ * @param y y座標
+ */
 void SSD1306_SetPos(unsigned char x, unsigned char y)
 {
     SSD1306_Write_Cmd(0xB0 + y);
@@ -51,7 +54,7 @@ void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char 
         while (ch[j] != '\0')
         {
             c = ch[j] - 32;
-            if (x > 126)
+            if (x > 127)
             {
                 x = 0;
                 // y++;
@@ -118,7 +121,7 @@ void SSD1306_ShowNum(unsigned char x, unsigned char y, unsigned int num, unsigne
         while (count != 0)
         {
             c = str[count - 1] - 32;
-            if (x > 126)
+            if (x > 127)
             {
                 x = 0;
                 // y++; //當x溢位時是否換行

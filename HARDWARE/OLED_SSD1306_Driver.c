@@ -1,7 +1,8 @@
 #include "OLED_SSD1306_Driver.h"
-extern unsigned char SSD1306_Type;
 ///////////////////////////////////////////////////////
-/*初始化設定*/
+/**
+ * @brief 初始化設定
+ */
 void SSD1306_Init(void)
 {
 /*GPIO初始化*/
@@ -20,14 +21,12 @@ void SSD1306_Init(void)
 
 #if (SCREEN_TYPE == SSD1306_128x32)
 
-    SSD1306_Type = 1;
     SSD1306_Write_Cmd(0xA8); //設定分辨率
     SSD1306_Write_Cmd(0x1F); // 128*64:0x3F  128*32:0x1F
     SSD1306_Write_Cmd(0xDA); //設置COM硬體預設配置，適應分辨率
     SSD1306_Write_Cmd(0x02); // 0x12:0.96-128*64    0x02:0.96-128*32
 #elif (SCREEN_TYPE == SSD1306_128x64)
 
-    SSD1306_Type = 2;
     SSD1306_Write_Cmd(0xA8); //設定分辨率
     SSD1306_Write_Cmd(0x3F); // 128*64:0x3F  128*32:0x1F
     SSD1306_Write_Cmd(0xDA); //設置COM硬體預設配置，適應分辨率
@@ -61,6 +60,7 @@ void SSD1306_Init(void)
     // CLK_SysTickDelay(10);
 }
 
+/*初始化引腳與Oledlib做相容*/
 #if (TRANSFER_METHOD == HW_IIC)
 
 void IIC_Configuration(void)

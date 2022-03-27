@@ -46,7 +46,7 @@ int main(void)
 	// SSD1306_Clear_Page(2, SSD1306_TextSize_F8X16);
 	SSD1306_Clear();
 	uint16_t count = strlen(CPU);
-	SSD1306_ShowStr(20, 4, "57578", SSD1306_TextSize_F6x8);
+	SSD1306_ShowStr(20, 4, "575877", SSD1306_TextSize_F6x8);
 	while (1)
 	{
 
