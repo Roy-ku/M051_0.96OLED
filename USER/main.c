@@ -21,7 +21,7 @@ void Timer_Init()
 	/* Enable Timer0 ~ Timer3 NVIC */
 	NVIC_EnableIRQ(TMR0_IRQn);
 
-	TIMER_Start(TIMER0);
+	//TIMER_Start(TIMER0);
 }
 void SYS_Init()
 {
@@ -65,6 +65,7 @@ int main(void)
 	SSD1306_Clear();
 	uint16_t count = strlen(CPU);
 	SSD1306_ShowStr(0, 4, "233331", SSD1306_TextSize_F6x8);
+	SSD1306_ShowStr(64, 2, "0", SSD1306_TextSize_F8X16);
 	while (1)
 	{
 

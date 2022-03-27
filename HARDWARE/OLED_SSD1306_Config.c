@@ -51,7 +51,7 @@ void SSD1306_SetPos(unsigned char x, unsigned char y)
  */
 void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char textsize)
 {
-    unsigned char c = 0, i = 0, j = 0;
+    unsigned char c = 0, j = 0;
 
     switch (textsize)
     {
@@ -60,15 +60,16 @@ void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char 
         while (ch[j] != '\0')
         {
             c = ch[j] - 32;
-            if (x > 127)
+            if (x >= 127)
             {
                 x = 0;
                 // y++;
             }
             SSD1306_SetPos(x, y);
-            for (i = 0; i < 6; i++)
+
+            for (unsigned char i = 0; i < 6; i++)
             {
-                SSD1306_Write_Data(F6x8[c][i]);
+                SSD1306_Write_Data(F6x8[c * 6 + i]);
             }
             x += 6;
             j++;
@@ -81,18 +82,18 @@ void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char 
         while (ch[j] != '\0')
         {
             c = ch[j] - 32;
-            if (x > 127)
+            if (x >= 127)
             {
                 x = 0;
                 // y++;
             }
             SSD1306_SetPos(x, y);
-            for (i = 0; i < 8; i++)
+            for (unsigned char i = 0; i < 8; i++)
             {
                 SSD1306_Write_Data(F8X16[c * 16 + i]);
             }
             SSD1306_SetPos(x, y + 1);
-            for (i = 0; i < 8; i++)
+            for (unsigned char i = 0; i < 8; i++)
             {
                 SSD1306_Write_Data(F8X16[c * 16 + i + 8]);
             }
@@ -135,7 +136,7 @@ void SSD1306_ShowNum(unsigned char x, unsigned char y, unsigned int num, unsigne
             SSD1306_SetPos(x, y);
             for (i = 0; i < 6; i++)
             {
-                SSD1306_Write_Data(F6x8[c][i]);
+                SSD1306_Write_Data(F6x8[c * 6 + i]);
             }
             x -= 6;
             count--;
