@@ -21,7 +21,7 @@ void Timer_Init()
 	/* Enable Timer0 ~ Timer3 NVIC */
 	NVIC_EnableIRQ(TMR0_IRQn);
 
-	//TIMER_Start(TIMER0);
+	TIMER_Start(TIMER0);
 }
 void SYS_Init()
 {
@@ -100,14 +100,18 @@ int main(void)
 		// }
 		for (int i = 0; i < 127 - count * 6; i++)
 		{
+			TIMER_Stop(TIMER0);
 			SSD1306_ShowStr(i, 0, CPU, SSD1306_TextSize_F6x8);
+			TIMER_Start(TIMER0);
 			Delay_ms(10);
 		}
 
 		for (int i = 127 - count * 6; i > 0; i--)
 		{
+			TIMER_Stop(TIMER0);
 			SSD1306_ShowStr(i, 0, CPU, SSD1306_TextSize_F6x8);
 			SSD1306_ShowStr(i + count * 6, 0, " ", SSD1306_TextSize_F6x8);
+			TIMER_Start(TIMER0);
 			Delay_ms(10);
 		}
 

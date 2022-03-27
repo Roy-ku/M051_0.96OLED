@@ -66,11 +66,22 @@ void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char 
                 // y++;
             }
             SSD1306_SetPos(x, y);
-
             for (unsigned char i = 0; i < 6; i++)
             {
                 SSD1306_Write_Data(F6x8[c * 6 + i]);
             }
+
+            // SW_IIC_Start();
+            // SW_IIC_Write_Byte(SSD1306_ADDRESS);
+            // SW_IIC_WaitAck();
+            // SW_IIC_Write_Byte(0x40);
+            // SW_IIC_WaitAck();
+            // for (unsigned char i = 0; i < 6; i++)
+            // {
+            //     SW_IIC_Write_Byte(F6x8[c * 6 + i]);
+            //     SW_IIC_WaitAck();
+            // }
+            // SW_IIC_Stop();
             x += 6;
             j++;
         }
@@ -134,6 +145,7 @@ void SSD1306_ShowNum(unsigned char x, unsigned char y, unsigned int num, unsigne
                 // y++; //當x溢位時是否換行
             }
             SSD1306_SetPos(x, y);
+
             for (i = 0; i < 6; i++)
             {
                 SSD1306_Write_Data(F6x8[c * 6 + i]);
