@@ -9,8 +9,8 @@
 
 #if (SOFTIICPINCONFIG == SOFTIIC1)
 
-#define IIC_SCL P20 //時脈
-#define IIC_SDA P21 //資料
+#define IIC_SCL P20 //CLK
+#define IIC_SDA P21 //SDA
 #define IIC_SDA_STATUS P21
 
 #elif (SOFTIICPINCONFIG == SOFTIIC2)
@@ -19,10 +19,10 @@
 #define IIC_SDA_STATUS P31
 #endif
 
-#define IIC_SCL_L IIC_SCL = 0 //時脈低
-#define IIC_SCL_H IIC_SCL = 1 //時脈高
-#define IIC_SDA_L IIC_SDA = 0 //資料低
-#define IIC_SDA_H IIC_SDA = 1 //資料高
+#define IIC_SCL_L IIC_SCL = 0 //CLK_L
+#define IIC_SCL_H IIC_SCL = 1 //CLK_H
+#define IIC_SDA_L IIC_SDA = 0 //SDA_L
+#define IIC_SDA_H IIC_SDA = 1 //SDA_H
 
 /********************************************************************************/
 

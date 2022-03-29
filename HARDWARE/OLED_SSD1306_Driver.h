@@ -15,6 +15,15 @@
 
 #define TRANSFER_METHOD (SW_IIC)
 
+#if (TRANSFER_METHOD == HW_IIC)
+        #define SSD1306_ADDRESS (0x78) // 0x78和0x7A兩個地址 -- 默認0x78
+#elif(TRANSFER_METHOD == SW_IIC)
+        #define SSD1306_ADDRESS (0x78) // 0x78和0x7A兩個地址 -- 默認0x78
+#elif(TRANSFER_METHOD == HW_SPI)
+
+#elif(TRANSFER_METHOD == SW_SPI)
+
+#endif
 /********************************************************************************/
 
 /*選擇螢幕類型*/
@@ -44,6 +53,7 @@
 #define SCREEN_PHY_X (21.744)
 #define SCREEN_PHY_Y (10.864)
 #endif
+
 #elif (SCREEN_TYPE == CUSTOMIZE)
 /*调整点阵分辨率128*64,宽度:128列，高度:64行*/
 #define SCREEN_COLUMN (128)
@@ -68,7 +78,7 @@ typedef enum
 } TEXTSIZE_TYPE;
 /********************************************************************************/
 
-#define SSD1306_ADDRESS (0x78) // 0x78和0x7A兩個地址 -- 默認0x78
+
 
 /********************************************************************************
 函式庫列表
