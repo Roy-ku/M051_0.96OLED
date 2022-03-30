@@ -5,7 +5,7 @@
 
 #define SOFTIIC1 (1)
 #define SOFTIIC2 (2)
-#define SOFTIICPINCONFIG (SOFTIIC1)
+#define SOFTIICPINCONFIG (SOFTIIC2)
 
 #if (SOFTIICPINCONFIG == SOFTIIC1)
 
@@ -14,9 +14,9 @@
 #define IIC_SDA_STATUS P21
 
 #elif (SOFTIICPINCONFIG == SOFTIIC2)
-#define IIC_SCL P30 //時脈
-#define IIC_SDA P31 //資料
-#define IIC_SDA_STATUS P31
+#define IIC_SCL P35 //時脈
+#define IIC_SDA P34 //資料
+#define IIC_SDA_STATUS P34
 #endif
 
 #define IIC_SCL_L IIC_SCL = 0 //CLK_L

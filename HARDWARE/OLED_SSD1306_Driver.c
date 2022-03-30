@@ -7,7 +7,7 @@ void SSD1306_Init(void)
 {
 /*GPIO初始化*/
 #if (TRANSFER_METHOD == HW_IIC)
-    I2C_Configuration();
+    IIC_Configuration();
 #elif (TRANSFER_METHOD == HW_SPI)
     SPI_Configuration();
 #elif (TRANSFER_METHOD == SW_SPI)
@@ -65,6 +65,15 @@ void SSD1306_Init(void)
 
 void IIC_Configuration(void)
 {
+    /* Enable I2C0 module clock */
+	CLK_EnableModuleClock(I2C0_MODULE);
+	/* Configure the SDA0 & SCL0 of I2C0 pins */
+	SYS->P3_MFP &= ~(SYS_MFP_P34_Msk | SYS_MFP_P35_Msk);
+	SYS->P3_MFP |= (SYS_MFP_P34_SDA0 | SYS_MFP_P35_SCL0);
+	/* Open I2C0 module and set bus clock */
+	I2C_Open(I2CX, IIC_SPEED);
+	/* Get I2C0 Bus Clock */
+	// printf("I2C0 clock %d Hz\n", I2C_GetBusClockFreq(I2C0));
 }
 #elif (TRANSFER_METHOD == HW_SPI)
 

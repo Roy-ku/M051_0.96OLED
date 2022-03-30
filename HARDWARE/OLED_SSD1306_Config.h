@@ -7,7 +7,7 @@
 /********************************************************************************
 函式庫列表
 ********************************************************************************/
-void SSD1306_Write(unsigned char addr, unsigned char data);
+void SSD1306_Write(unsigned char controladdr, unsigned char data);
 void SSD1306_Write_Cmd(unsigned char data);
 void SSD1306_Write_Data(unsigned char data);
 void SSD1306_SetPos(unsigned char x, unsigned char y);

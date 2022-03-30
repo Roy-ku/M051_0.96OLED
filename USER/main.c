@@ -20,8 +20,6 @@ void Timer_Init()
 	TIMER_EnableInt(TIMER0);
 	/* Enable Timer0 ~ Timer3 NVIC */
 	NVIC_EnableIRQ(TMR0_IRQn);
-
-	TIMER_Start(TIMER0);
 }
 void SYS_Init()
 {
@@ -56,48 +54,31 @@ int main(void)
 	Delay_ms(1000);
 
 	char CPU[] = "CPU: ", CoreClock[10];
-	// char I2C_C[] = "I2C_Clock: ", I2C_Clock[10];
-	sprintf(CoreClock, "%d", SystemCoreClock / 1000000);
 
+	sprintf(CoreClock, "%d", SystemCoreClock / 1000000);
 	strcat(CPU, CoreClock);
 	strcat(CPU, "MHZ");
-	// SSD1306_Clear_Page(2, SSD1306_TextSize_F8X16);
+
 	SSD1306_Clear();
+	TIMER_Start(TIMER0);
 	uint16_t count = strlen(CPU);
-	SSD1306_ShowStr(0, 4, "Ver.003", SSD1306_TextSize_F6x8);
+
+	#if (TRANSFER_METHOD == HW_IIC)
+		char I2C_C[] = "I2CClock:", I2C_Clock[10];
+		sprintf(I2C_Clock, "%d", I2C_GetBusClockFreq(I2C0) / 1000);
+		strcat(I2C_C, I2C_Clock);
+		strcat(I2C_C, "KHZ");
+		SSD1306_ShowStr(0, 5, "HW_IIC", SSD1306_TextSize_F6x8);
+		SSD1306_ShowStr(0, 7, I2C_C, SSD1306_TextSize_F6x8);
+	#elif  (TRANSFER_METHOD == SW_IIC)
+
+		SSD1306_ShowStr(0, 5, "SW_IIC", SSD1306_TextSize_F6x8);
+	#endif
+
+	SSD1306_ShowStr(0, 4, "Ver.001", SSD1306_TextSize_F6x8);
 	SSD1306_ShowStr(64, 2, "0", SSD1306_TextSize_F8X16);
 	while (1)
 	{
-
-		// static int count = 0;
-		// if (count == 20000)
-		// 	count = 0;
-		// if (count % 3)
-		// {
-		// 	if (count % 3 == 1)
-		// 	{
-		// 		SSD1306_Clear_Page(0);
-		// 		SSD1306_Clear_Page(1);
-		// 		SSD1306_ShowStr(0, 0, CPU, SSD1306_TextSize_F6x8);
-		// 	}
-		// }
-		// else
-		// {
-		// 	// SSD1306_Clear_Page(0, SSD1306_TextSize_F8X16);
-		// 	SSD1306_ShowStr(0, 0, "12345678123", SSD1306_TextSize_F8X16);
-		// }
-		// sprintf(Count_num, "%d", count);
-		// SSD1306_ShowStr(64, 2, Count_num, SSD1306_TextSize_F8X16);
-		// count++;
-		// Delay_ms(1000);
-
-		// for (uint8_t i = 0; i < 8; i++)
-		// {
-		//  	SSD1306_FILL(BMP1);
-		//  	Delay_ms(500);
-		// 	SSD1306_Clear_Page(i);
-		// 	Delay_ms(500);
-		// }
 		for (int i = 0; i < 127 - count * 6; i++)
 		{
 			TIMER_Stop(TIMER0);
@@ -114,7 +95,6 @@ int main(void)
 			TIMER_Start(TIMER0);
 			Delay_ms(10);
 		}
-
 	}
 }
 
