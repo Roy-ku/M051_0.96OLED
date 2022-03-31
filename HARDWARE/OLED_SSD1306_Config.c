@@ -1,8 +1,6 @@
 #include "OLED_SSD1306_Config.h"
 #include "Font.h"
 
-
-
 /**
  * @brief 設置起始座標
  * @param x x座標
@@ -243,6 +241,9 @@ void SSD1306_Clear(void)
             SSD1306_Write_Data(0x00);
         }
 #elif (MODE == 2)
+#if (TRANSFER_METHOD == HW_IIC)
+
+#elif (TRANSFER_METHOD == SW_IIC)
         SW_IIC_Start();
         SW_IIC_Write_Byte(SSD1306_ADDRESS);
         SW_IIC_WaitAck();
@@ -254,7 +255,8 @@ void SSD1306_Clear(void)
             SW_IIC_WaitAck();
         }
         SW_IIC_Stop();
-#endif
+#endif // TRANSFER_METHOD
+#endif // MODE
     }
 
     // unsigned char *p;
@@ -349,17 +351,17 @@ void SSD1306_OFF()
 
 void SSD1306_Run_Right()
 {
-    SSD1306_Write_Cmd(0x2e);    //關閉滾動
-    SSD1306_Write_Cmd(0x27);    //0x26:右，0x27:左
+    SSD1306_Write_Cmd(0x2e); //關閉滾動
+    SSD1306_Write_Cmd(0x27); // 0x26:右，0x27:左
 
-    SSD1306_Write_Cmd(0x00);    //空字節
-    SSD1306_Write_Cmd(0x00);    //起始頁0
-    SSD1306_Write_Cmd(0x07);    //移動間隔
-    SSD1306_Write_Cmd(0x07);    //終止頁7
-    SSD1306_Write_Cmd(0x00);    //空字節
-    SSD1306_Write_Cmd(0xFF);    //空字節
+    SSD1306_Write_Cmd(0x00); //空字節
+    SSD1306_Write_Cmd(0x00); //起始頁0
+    SSD1306_Write_Cmd(0x07); //移動間隔
+    SSD1306_Write_Cmd(0x07); //終止頁7
+    SSD1306_Write_Cmd(0x00); //空字節
+    SSD1306_Write_Cmd(0xFF); //空字節
 
-    SSD1306_Write_Cmd(0x2f);    //開啟滾動
+    SSD1306_Write_Cmd(0x2f); //開啟滾動
 }
 
 void SSD1306_Vertical()
@@ -382,5 +384,5 @@ void SSD1306_Vertical()
 
 void SSD1306_ScrollStop()
 {
-    SSD1306_Write_Cmd(0x2e);    //關閉滾動
+    SSD1306_Write_Cmd(0x2e); //關閉滾動
 }
