@@ -1,95 +1,7 @@
 #include "OLED_SSD1306_Config.h"
 #include "Font.h"
 
-// unsigned char ScreenBuffer[SCREEN_PAGE_NUM][SCREEN_COLUMN] = {0};
 
-#if (TRANSFER_METHOD == HW_IIC)
-uint8_t I2C_WriteByte(I2C_T *i2c, uint8_t controlAddr, uint8_t data)
-{
-    uint8_t u8Xfering = 1, u8Err = 0, u8Ctrl = 0, u8length = 0;
-
-    I2C_START(i2c);
-    while (u8Xfering && (u8Err == 0))
-    {
-        I2C_WAIT_READY(i2c);
-        switch (I2C_GET_STATUS(i2c))
-        {
-        /*發送START信號成功*/
-        case 0x08:
-            I2C_SET_DATA(i2c, SSD1306_ADDRESS); /* Write SLA+W to Register I2CDAT */
-            u8Ctrl = I2C_I2CON_SI;              /* Clear SI */
-            break;
-        /*發送地址+W成功並收到ACK*/
-        case 0x18:                          /* Slave Address ACK */
-            I2C_SET_DATA(i2c, controlAddr); /* Write data or cmd */
-            u8Ctrl = I2C_I2CON_SI;          /* Clear SI */
-            break;
-        /*發送數據成功並收到ACK*/
-        case 0x28:
-            if (u8length < 1)
-            {
-                I2C_SET_DATA(i2c, data); /* Write data to I2CDAT */
-                u8Ctrl = I2C_I2CON_SI;   /* Clear SI */
-                u8length++;
-            }
-            else
-            {
-                u8Ctrl = I2C_I2CON_STO_SI; /* Clear SI and send STOP */
-                u8Xfering = 0;
-            }
-            break;
-        /*發送地址+W成功並收到NACK*/
-        case 0x20:                     /* Slave Address NACK */
-                                       /*發送數據成功並收到NACK*/
-        case 0x30:                     /* Master transmit data NACK */
-                                       /*Master發生仲裁失敗*/
-        case 0x38:                     /* Arbitration Lost */
-        default:                       /* Unknow status */
-            u8Ctrl = I2C_I2CON_STO_SI; /* Clear SI and send STOP */
-            u8Err = 1;
-            break;
-        }
-        I2C_SET_CONTROL_REG(i2c, u8Ctrl); /* Write controlbit to I2C_CTL register */
-    }
-    return (u8Err | u8Xfering); /* return (Success)/(Fail) status */
-}
-
-void SSD1306_Write_Cmd(unsigned char data)
-{
-    //SSD1306_Write(0x00,data);
-    I2C_WriteByte(I2CX, 0x00, data);
-}
-
-void SSD1306_Write_Data(unsigned char data)
-{
-    //SSD1306_Write(0x40,data);
-    I2C_WriteByte(I2CX, 0x40, data);
-}
-
-#elif (TRANSFER_METHOD == SW_IIC)
-void SSD1306_Write(unsigned char controladdr, unsigned char data)
-{
-    SW_IIC_Start();
-    SW_IIC_Write_Byte(SSD1306_ADDRESS);
-    SW_IIC_WaitAck();
-    SW_IIC_Write_Byte(controladdr);
-    SW_IIC_WaitAck();
-    SW_IIC_Write_Byte(data);
-    SW_IIC_WaitAck();
-    SW_IIC_Stop();
-}
-
-void SSD1306_Write_Cmd(unsigned char data)
-{
-    SSD1306_Write(0x00, data);
-}
-
-void SSD1306_Write_Data(unsigned char data)
-{
-    SSD1306_Write(0x40, data);
-}
-
-#endif
 
 /**
  * @brief 設置起始座標
@@ -437,15 +349,17 @@ void SSD1306_OFF()
 
 void SSD1306_Run_Right()
 {
-    SSD1306_Write_Cmd(0x2e);
+    SSD1306_Write_Cmd(0x2e);    //關閉滾動
+    SSD1306_Write_Cmd(0x27);    //0x26:右，0x27:左
 
-    SSD1306_Write_Cmd(0x29);
-    SSD1306_Write_Cmd(0x00);
-    SSD1306_Write_Cmd(0x00);
-    SSD1306_Write_Cmd(0x06);
-    SSD1306_Write_Cmd(0x07);
+    SSD1306_Write_Cmd(0x00);    //空字節
+    SSD1306_Write_Cmd(0x00);    //起始頁0
+    SSD1306_Write_Cmd(0x07);    //移動間隔
+    SSD1306_Write_Cmd(0x07);    //終止頁7
+    SSD1306_Write_Cmd(0x00);    //空字節
+    SSD1306_Write_Cmd(0xFF);    //空字節
 
-    SSD1306_Write_Cmd(0x2f);
+    SSD1306_Write_Cmd(0x2f);    //開啟滾動
 }
 
 void SSD1306_Vertical()
@@ -464,4 +378,9 @@ void SSD1306_Vertical()
     SSD1306_Write_Cmd(0x04);
 
     SSD1306_Write_Cmd(0x2f);
+}
+
+void SSD1306_ScrollStop()
+{
+    SSD1306_Write_Cmd(0x2e);    //關閉滾動
 }

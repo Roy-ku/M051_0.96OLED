@@ -34,23 +34,11 @@ void SYS_Init()
 	SystemCoreClockUpdate();
 }
 ///////////////////////////////////////////////////////
-int main(void)
+void Demo1()
 {
-
-	/* Unlock protected registers */
-	SYS_UnlockReg();
-	/* Init System, peripheral clock and multi-function I/O */
-	SYS_Init();
-	Timer_Init();
-	Delay_Init();
-	/* Lock protected registers */
-	SYS_LockReg();
-
-	SSD1306_Init();
-
 	extern unsigned char BMP1[];
 	SSD1306_DrawBMP(0, 0, 128, 8, BMP1);
-	// SSD1306_FILL(BMP1);
+	//SSD1306_FILL(BMP1);
 	Delay_ms(1000);
 
 	char CPU[] = "CPU: ", CoreClock[10];
@@ -60,23 +48,24 @@ int main(void)
 	strcat(CPU, "MHZ");
 
 	SSD1306_Clear();
-	TIMER_Start(TIMER0);
+	// TIMER_Start(TIMER0);
 	uint16_t count = strlen(CPU);
 
-	#if (TRANSFER_METHOD == HW_IIC)
-		char I2C_C[] = "I2CClock:", I2C_Clock[10];
-		sprintf(I2C_Clock, "%d", I2C_GetBusClockFreq(I2C0) / 1000);
-		strcat(I2C_C, I2C_Clock);
-		strcat(I2C_C, "KHZ");
-		SSD1306_ShowStr(0, 5, "HW_IIC", SSD1306_TextSize_F6x8);
-		SSD1306_ShowStr(0, 7, I2C_C, SSD1306_TextSize_F6x8);
-	#elif  (TRANSFER_METHOD == SW_IIC)
+#if (TRANSFER_METHOD == HW_IIC)
+	char I2C_C[] = "I2CClock:", I2C_Clock[10];
+	sprintf(I2C_Clock, "%d", I2C_GetBusClockFreq(I2C0) / 1000);
+	strcat(I2C_C, I2C_Clock);
+	strcat(I2C_C, "KHZ");
+	SSD1306_ShowStr(0, 5, "HW_IIC", SSD1306_TextSize_F6x8);
+	SSD1306_ShowStr(0, 7, I2C_C, SSD1306_TextSize_F6x8);
+#elif (TRANSFER_METHOD == SW_IIC)
 
-		SSD1306_ShowStr(0, 5, "SW_IIC", SSD1306_TextSize_F6x8);
-	#endif
+	SSD1306_ShowStr(0, 5, "SW_IIC", SSD1306_TextSize_F6x8);
+#endif
 
 	SSD1306_ShowStr(0, 4, "Ver.001", SSD1306_TextSize_F6x8);
 	SSD1306_ShowStr(64, 2, "0", SSD1306_TextSize_F8X16);
+
 	while (1)
 	{
 		for (int i = 0; i < 127 - count * 6; i++)
@@ -96,6 +85,23 @@ int main(void)
 			Delay_ms(10);
 		}
 	}
+}
+
+int main(void)
+{
+
+	/* Unlock protected registers */
+	SYS_UnlockReg();
+	/* Init System, peripheral clock and multi-function I/O */
+	SYS_Init();
+	Timer_Init();
+	Delay_Init();
+	/* Lock protected registers */
+	SYS_LockReg();
+
+	SSD1306_Init();
+
+	Demo1();
 }
 
 void TMR0_IRQHandler(void)
