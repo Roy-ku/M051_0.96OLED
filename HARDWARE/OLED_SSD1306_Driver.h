@@ -13,7 +13,7 @@
 #define HW_SPI (2) //目前無作用
 #define SW_SPI (3) //目前無作用
 
-#define TRANSFER_METHOD (HW_IIC)
+#define TRANSFER_METHOD (SW_IIC)
 
 #if (TRANSFER_METHOD == HW_IIC)
         #define SSD1306_ADDRESS (0x78) // 0x78和0x7A兩個地址 -- 默認0x78
@@ -86,8 +86,8 @@ typedef enum
 函式庫列表
 ********************************************************************************/
 void SSD1306_Init(void);
-void SSD1306_Continuous_Write(uint8_t data);
-uint8_t HW_I2C_Continuous_WriteByte(I2C_T *i2c, uint8_t data);
+void SSD1306_Continuous_Write(uint8_t *data);
+uint8_t HW_I2C_Continuous_WriteByte(I2C_T *i2c, uint8_t *data);
 uint8_t HW_I2C_WriteByte(I2C_T *i2c, uint8_t controlAddr, uint8_t data);
 void SSD1306_Write(uint8_t controladdr, uint8_t data);
 void SSD1306_Write_Cmd(uint8_t data);

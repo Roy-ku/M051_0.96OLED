@@ -3,7 +3,7 @@
 
 #if (TRANSFER_METHOD == HW_IIC)
 
-uint8_t HW_I2C_Continuous_WriteByte(I2C_T *i2c, uint8_t data)
+uint8_t HW_I2C_Continuous_WriteByte(I2C_T *i2c, uint8_t *data)
 {
     uint8_t u8Xfering = 1, u8Err = 0, u8Ctrl = 0, u8length = 0;
 
@@ -27,7 +27,7 @@ uint8_t HW_I2C_Continuous_WriteByte(I2C_T *i2c, uint8_t data)
         case 0x28:
             if (u8length < SCREEN_PAGEDATA_NUM)
             {
-                I2C_SET_DATA(i2c, data); /* Write data to I2CDAT */
+                I2C_SET_DATA(i2c, *data++); /* Write data to I2CDAT */
                 u8Ctrl = I2C_I2CON_SI;   /* Clear SI */
                 u8length++;
             }
@@ -117,7 +117,7 @@ void SSD1306_Write_Data(uint8_t data)
 
 #elif (TRANSFER_METHOD == SW_IIC)
 
-void SSD1306_Continuous_Write(uint8_t data)
+void SSD1306_Continuous_Write(uint8_t *data)
 {
     SW_IIC_Start();
     SW_IIC_Write_Byte(SSD1306_ADDRESS);
@@ -126,7 +126,7 @@ void SSD1306_Continuous_Write(uint8_t data)
     SW_IIC_WaitAck();
     for (uint8_t n = 0; n < SCREEN_PAGEDATA_NUM; n++)
     {
-        SW_IIC_Write_Byte(data);
+        SW_IIC_Write_Byte(*data++);
         SW_IIC_WaitAck();
     }
     SW_IIC_Stop();

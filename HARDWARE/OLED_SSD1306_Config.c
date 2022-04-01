@@ -196,18 +196,27 @@ void SSD1306_DrawBMP(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, const uint8
  */
 void SSD1306_FILL(const uint8_t *BMP)
 {
-    uint8_t i, j;
-
-    for (i = 0; i < 8; i++)
+    uint8_t *page_buff = (uint8_t *)BMP;
+    for (uint8_t i = 0; i < SCREEN_PAGE_NUM; i++)
     {
         SSD1306_Write_Cmd(0xB0 + i); //設置頁地址（0~7）
         SSD1306_Write_Cmd(0x00);     //設置顯示位置—列低地址
         SSD1306_Write_Cmd(0x10);     //設置顯示位置—列高地址
+#define MODE1 (2)
+#if (MODE1 == 1)
 
-        for (j = 0; j < 128; j++)
+        for (uint8_t j = 0; j < SCREEN_PAGEDATA_NUM; j++)
         {
             SSD1306_Write_Data(*BMP++);
         }
+#elif (MODE1 == 2)
+#if (TRANSFER_METHOD == HW_IIC)
+        HW_I2C_Continuous_WriteByte(I2CX, page_buff);
+#elif (TRANSFER_METHOD == SW_IIC)
+        SSD1306_Continuous_Write(page_buff);
+        page_buff = page_buff + SCREEN_PAGEDATA_NUM; //偏移128單位
+#endif // TRANSFER_METHOD
+#endif // MODE1
     }
 }
 
@@ -223,7 +232,7 @@ void SSD1306_Clear(void)
     // p = ScreenBuffer[0];
     // page_len = 8;
 #endif
-
+    uint8_t page_buff[128] = {0x00};
     for (uint8_t i = 0; i < SCREEN_PAGE_NUM; i++)
     {
         SSD1306_Write_Cmd(0xB0 + i); //設置頁地址（0~7）
@@ -239,9 +248,9 @@ void SSD1306_Clear(void)
         }
 #elif (MODE == 2)
 #if (TRANSFER_METHOD == HW_IIC)
-        HW_I2C_Continuous_WriteByte(I2CX, 0x00);
+        HW_I2C_Continuous_WriteByte(I2CX, page_buff);
 #elif (TRANSFER_METHOD == SW_IIC)
-        SSD1306_Continuous_Write(0x00);
+        SSD1306_Continuous_Write(page_buff);
 #endif // TRANSFER_METHOD
 #endif // MODE
     }
@@ -354,7 +363,7 @@ void SSD1306_Run_Right()
 void SSD1306_Vertical()
 {
     SSD1306_Write_Cmd(0x2e); //關閉滾動
-    SSD1306_Write_Cmd(0x29); //0x29 0x2a
+    SSD1306_Write_Cmd(0x29); // 0x29 0x2a
 
     SSD1306_Write_Cmd(0x00); //空字節
     SSD1306_Write_Cmd(0x00); //起始頁0
