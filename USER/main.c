@@ -3,9 +3,9 @@
 #include "M051Series.h"
 #include "OLED_SSD1306_Driver.h"
 #include "User_Delay.h"
+#include"Oled_bmp.h"
+uint16_t count = 0;
 
-int count = 0;
-char Count_num[10];
 ///////////////////////////////////////////////////////
 
 void Timer_Init()
@@ -21,6 +21,7 @@ void Timer_Init()
 	/* Enable Timer0 ~ Timer3 NVIC */
 	NVIC_EnableIRQ(TMR0_IRQn);
 }
+
 void SYS_Init()
 {
 	/* Enable external XTAL 12MHz clock */
@@ -36,7 +37,7 @@ void SYS_Init()
 ///////////////////////////////////////////////////////
 void Demo1()
 {
-	extern unsigned char BMP1[];
+	//extern uint8_t BMP1[];
 	SSD1306_DrawBMP(0, 0, 128, 8, BMP1);
 	//SSD1306_FILL(BMP1);
 	Delay_ms(1000);
@@ -48,7 +49,7 @@ void Demo1()
 	strcat(CPU, "MHZ");
 
 	SSD1306_Clear();
-	// TIMER_Start(TIMER0);
+	TIMER_Start(TIMER0);
 	uint16_t count = strlen(CPU);
 
 #if (TRANSFER_METHOD == HW_IIC)
@@ -63,12 +64,12 @@ void Demo1()
 	SSD1306_ShowStr(0, 5, "SW_IIC", SSD1306_TextSize_F6x8);
 #endif
 
-	SSD1306_ShowStr(0, 4, "Ver.001", SSD1306_TextSize_F6x8);
+	SSD1306_ShowStr(0, 4, "Ver.005", SSD1306_TextSize_F6x8);
 	SSD1306_ShowStr(64, 2, "0", SSD1306_TextSize_F8X16);
 
 	while (1)
 	{
-		for (int i = 0; i < 127 - count * 6; i++)
+		for (uint8_t i = 0; i < 127 - count * 6; i++)
 		{
 			TIMER_Stop(TIMER0);
 			SSD1306_ShowStr(i, 0, CPU, SSD1306_TextSize_F6x8);
@@ -76,7 +77,7 @@ void Demo1()
 			Delay_ms(10);
 		}
 
-		for (int i = 127 - count * 6; i > 0; i--)
+		for (uint8_t i = 127 - count * 6; i > 0; i--)
 		{
 			TIMER_Stop(TIMER0);
 			SSD1306_ShowStr(i, 0, CPU, SSD1306_TextSize_F6x8);
@@ -108,6 +109,7 @@ void TMR0_IRQHandler(void)
 {
 	if (TIMER_GetIntFlag(TIMER0) == 1)
 	{
+		char Count_num[10];
 		/* Clear Timer0 time-out interrupt flag */
 		TIMER_ClearIntFlag(TIMER0);
 		if (count == 20000)

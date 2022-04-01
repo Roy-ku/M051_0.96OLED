@@ -1,12 +1,12 @@
 #include "OLED_SSD1306_Config.h"
 #include "Font.h"
-
+#include "Oled_bmp.h"
 /**
  * @brief 設置起始座標
  * @param x x座標
  * @param y y座標
  */
-void SSD1306_SetPos(unsigned char x, unsigned char y)
+void SSD1306_SetPos(uint8_t x, uint8_t y)
 {
     SSD1306_Write_Cmd(0xB0 + y);
     SSD1306_Write_Cmd(((x & 0xF0) >> 4) | 0x10);
@@ -20,9 +20,9 @@ void SSD1306_SetPos(unsigned char x, unsigned char y)
  * @param ch 需顯示的字串
  * @param textsize 字體大小
  */
-void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char textsize)
+void SSD1306_ShowStr(uint8_t x, uint8_t y, char ch[], uint8_t textsize)
 {
-    unsigned char c = 0, j = 0;
+    uint8_t c = 0, j = 0;
 
     switch (textsize)
     {
@@ -37,7 +37,7 @@ void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char 
                 // y++;
             }
             SSD1306_SetPos(x, y);
-            for (unsigned char i = 0; i < 6; i++)
+            for (uint8_t i = 0; i < 6; i++)
             {
                 SSD1306_Write_Data(F6x8[c * 6 + i]);
             }
@@ -47,7 +47,7 @@ void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char 
             // SW_IIC_WaitAck();
             // SW_IIC_Write_Byte(0x40);
             // SW_IIC_WaitAck();
-            // for (unsigned char i = 0; i < 6; i++)
+            // for (uint8_t i = 0; i < 6; i++)
             // {
             //     SW_IIC_Write_Byte(F6x8[c * 6 + i]);
             //     SW_IIC_WaitAck();
@@ -70,12 +70,12 @@ void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char 
                 // y++;
             }
             SSD1306_SetPos(x, y);
-            for (unsigned char i = 0; i < 8; i++)
+            for (uint8_t i = 0; i < 8; i++)
             {
                 SSD1306_Write_Data(F8X16[c * 16 + i]);
             }
             SSD1306_SetPos(x, y + 1);
-            for (unsigned char i = 0; i < 8; i++)
+            for (uint8_t i = 0; i < 8; i++)
             {
                 SSD1306_Write_Data(F8X16[c * 16 + i + 8]);
             }
@@ -95,9 +95,9 @@ void SSD1306_ShowStr(unsigned char x, unsigned char y, char ch[], unsigned char 
  * @param TextSize 字體大小
  * @note  從右至左
  */
-void SSD1306_ShowNum(unsigned char x, unsigned char y, unsigned int num, unsigned char TextSize)
+void SSD1306_ShowNum(uint8_t x, uint8_t y, unsigned int num, uint8_t TextSize)
 {
-    unsigned char c = 0, i = 0;
+    uint8_t c = 0, i = 0;
     short count = 0;
     char str[5] = "", str_n[5];
     snprintf(str_n, sizeof(str_n), "%d", num);
@@ -172,11 +172,10 @@ void SSD1306_ShowNum(unsigned char x, unsigned char y, unsigned int num, unsigne
  * @note  x0,y0 -- 起始點坐標(x0:0~127, y0:0~7)
  *        x1,y1 -- 起點對角線(結束點)的坐標(x1:1~128,y1:1~ 8)
  */
-void SSD1306_DrawBMP(unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1, unsigned char BMP[])
+void SSD1306_DrawBMP(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, const uint8_t *BMP)
 {
-    unsigned char x, y;
-    unsigned char *p;
-    p = BMP;
+    uint8_t x, y;
+
     if (y1 % 4 == 0)
         y = y1 / 4;
     else
@@ -186,7 +185,7 @@ void SSD1306_DrawBMP(unsigned char x0, unsigned char y0, unsigned char x1, unsig
         SSD1306_SetPos(x0, y);
         for (x = x0; x < x1; x++)
         {
-            SSD1306_Write_Data(*p++);
+            SSD1306_Write_Data(*BMP++);
         }
     }
 }
@@ -195,11 +194,9 @@ void SSD1306_DrawBMP(unsigned char x0, unsigned char y0, unsigned char x1, unsig
  * @brief 螢幕填充
  * @param BMP 點陣圖形
  */
-void SSD1306_FILL(unsigned char BMP[])
+void SSD1306_FILL(const uint8_t *BMP)
 {
-    unsigned char i, j;
-    unsigned char *p;
-    p = BMP;
+    uint8_t i, j;
 
     for (i = 0; i < 8; i++)
     {
@@ -209,7 +206,7 @@ void SSD1306_FILL(unsigned char BMP[])
 
         for (j = 0; j < 128; j++)
         {
-            SSD1306_Write_Data(*p++);
+            SSD1306_Write_Data(*BMP++);
         }
     }
 }
@@ -227,39 +224,29 @@ void SSD1306_Clear(void)
     // page_len = 8;
 #endif
 
-    for (unsigned char i = 0; i < SCREEN_PAGE_NUM; i++)
+    for (uint8_t i = 0; i < SCREEN_PAGE_NUM; i++)
     {
         SSD1306_Write_Cmd(0xB0 + i); //設置頁地址（0~7）
         SSD1306_Write_Cmd(0x00);     //設置顯示位置—列低地址
         SSD1306_Write_Cmd(0x10);     //設置顯示位置—列高地址
 
-#define MODE (1)
+#define MODE (2)
 #if (MODE == 1)
 
-        for (unsigned char j = 0; j < 128; j++)
+        for (uint8_t j = 0; j < 128; j++)
         {
             SSD1306_Write_Data(0x00);
         }
 #elif (MODE == 2)
 #if (TRANSFER_METHOD == HW_IIC)
-
+        HW_I2C_Continuous_WriteByte(I2CX, 0x00);
 #elif (TRANSFER_METHOD == SW_IIC)
-        SW_IIC_Start();
-        SW_IIC_Write_Byte(SSD1306_ADDRESS);
-        SW_IIC_WaitAck();
-        SW_IIC_Write_Byte(0x40);
-        SW_IIC_WaitAck();
-        for (unsigned char n = 0; n < SCREEN_PAGEDATA_NUM; n++)
-        {
-            SW_IIC_Write_Byte(0x00);
-            SW_IIC_WaitAck();
-        }
-        SW_IIC_Stop();
+        SSD1306_Continuous_Write(0x00);
 #endif // TRANSFER_METHOD
 #endif // MODE
     }
 
-    // unsigned char *p;
+    // uint8_t *p;
     //  SW_IIC_Start();
     //  SW_IIC_Write_Byte(SSD1306_ADDRESS);
     //  SW_IIC_WaitAck();
@@ -283,9 +270,9 @@ void SSD1306_Clear(void)
  * @param page 一個Page
  * @note page: 0~7
  */
-void SSD1306_Clear_Page(unsigned char page)
+void SSD1306_Clear_Page(uint8_t page)
 {
-    unsigned char page_address_pos;
+    uint8_t page_address_pos;
 #if (SCREEN_TYPE == SSD1306_128x32)
 
     if (page >= 4)
@@ -325,7 +312,7 @@ void SSD1306_Clear_Page(unsigned char page)
     SSD1306_Write_Cmd(0xB0 + page_address_pos); //設置頁地址（0~7）
     SSD1306_Write_Cmd(0x00);                    //設置顯示位置—列低地址
     SSD1306_Write_Cmd(0x10);                    //設置顯示位置—列高地址
-    for (unsigned char n = 0; n < 128; n++)
+    for (uint8_t n = 0; n < 128; n++)
         SSD1306_Write_Data(0x00);
 }
 
@@ -366,20 +353,16 @@ void SSD1306_Run_Right()
 
 void SSD1306_Vertical()
 {
-    SSD1306_Write_Cmd(0x2e);
+    SSD1306_Write_Cmd(0x2e); //關閉滾動
+    SSD1306_Write_Cmd(0x29); //0x29 0x2a
 
-    SSD1306_Write_Cmd(0xa3);
-    SSD1306_Write_Cmd(0x00);
-    SSD1306_Write_Cmd(0x40);
+    SSD1306_Write_Cmd(0x00); //空字節
+    SSD1306_Write_Cmd(0x00); //起始頁0
+    SSD1306_Write_Cmd(0x07); //移動間隔
+    SSD1306_Write_Cmd(0x07); //終止頁7
+    SSD1306_Write_Cmd(0x01); //垂直偏移量
 
-    SSD1306_Write_Cmd(0x2a);
-    SSD1306_Write_Cmd(0x00);
-    SSD1306_Write_Cmd(0x00);
-    SSD1306_Write_Cmd(0x01);
-    SSD1306_Write_Cmd(0x00);
-    SSD1306_Write_Cmd(0x04);
-
-    SSD1306_Write_Cmd(0x2f);
+    SSD1306_Write_Cmd(0x2f); //開啟滾動
 }
 
 void SSD1306_ScrollStop()

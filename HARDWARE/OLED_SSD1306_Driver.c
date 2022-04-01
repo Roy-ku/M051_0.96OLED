@@ -2,7 +2,58 @@
 ///////////////////////////////////////////////////////
 
 #if (TRANSFER_METHOD == HW_IIC)
-uint8_t I2C_WriteByte(I2C_T *i2c, uint8_t controlAddr, uint8_t data)
+
+uint8_t HW_I2C_Continuous_WriteByte(I2C_T *i2c, uint8_t data)
+{
+    uint8_t u8Xfering = 1, u8Err = 0, u8Ctrl = 0, u8length = 0;
+
+    I2C_START(i2c);
+    while (u8Xfering && (u8Err == 0))
+    {
+        I2C_WAIT_READY(i2c);
+        switch (I2C_GET_STATUS(i2c))
+        {
+        /*發送START信號成功*/
+        case 0x08:
+            I2C_SET_DATA(i2c, SSD1306_ADDRESS); /* Write SLA+W to Register I2CDAT */
+            u8Ctrl = I2C_I2CON_SI;              /* Clear SI */
+            break;
+        /*發送地址+W成功並收到ACK*/
+        case 0x18:                          /* Slave Address ACK */
+            I2C_SET_DATA(i2c, 0x40);        /* Write data */
+            u8Ctrl = I2C_I2CON_SI;          /* Clear SI */
+            break;
+        /*發送數據成功並收到ACK*/
+        case 0x28:
+            if (u8length < SCREEN_PAGEDATA_NUM)
+            {
+                I2C_SET_DATA(i2c, data); /* Write data to I2CDAT */
+                u8Ctrl = I2C_I2CON_SI;   /* Clear SI */
+                u8length++;
+            }
+            else
+            {
+                u8Ctrl = I2C_I2CON_STO_SI; /* Clear SI and send STOP */
+                u8Xfering = 0;
+            }
+            break;
+        /*發送地址+W成功並收到NACK*/
+        case 0x20:                     /* Slave Address NACK */
+                                       /*發送數據成功並收到NACK*/
+        case 0x30:                     /* Master transmit data NACK */
+                                       /*Master發生仲裁失敗*/
+        case 0x38:                     /* Arbitration Lost */
+        default:                       /* Unknow status */
+            u8Ctrl = I2C_I2CON_STO_SI; /* Clear SI and send STOP */
+            u8Err = 1;
+            break;
+        }
+        I2C_SET_CONTROL_REG(i2c, u8Ctrl); /* Write controlbit to I2C_CTL register */
+    }
+    return (u8Err | u8Xfering); /* return (Success)/(Fail) status */
+}
+
+uint8_t HW_I2C_WriteByte(I2C_T *i2c, uint8_t controlAddr, uint8_t data)
 {
     uint8_t u8Xfering = 1, u8Err = 0, u8Ctrl = 0, u8length = 0;
 
@@ -52,20 +103,36 @@ uint8_t I2C_WriteByte(I2C_T *i2c, uint8_t controlAddr, uint8_t data)
     return (u8Err | u8Xfering); /* return (Success)/(Fail) status */
 }
 
-void SSD1306_Write_Cmd(unsigned char data)
+void SSD1306_Write_Cmd(uint8_t data)
 {
     //SSD1306_Write(0x00,data);
-    I2C_WriteByte(I2CX, 0x00, data);
+    HW_I2C_WriteByte(I2CX, 0x00, data);
 }
 
-void SSD1306_Write_Data(unsigned char data)
+void SSD1306_Write_Data(uint8_t data)
 {
     //SSD1306_Write(0x40,data);
-    I2C_WriteByte(I2CX, 0x40, data);
+    HW_I2C_WriteByte(I2CX, 0x40, data);
 }
 
 #elif (TRANSFER_METHOD == SW_IIC)
-void SSD1306_Write(unsigned char controladdr, unsigned char data)
+
+void SSD1306_Continuous_Write(uint8_t data)
+{
+    SW_IIC_Start();
+    SW_IIC_Write_Byte(SSD1306_ADDRESS);
+    SW_IIC_WaitAck();
+    SW_IIC_Write_Byte(0x40);
+    SW_IIC_WaitAck();
+    for (uint8_t n = 0; n < SCREEN_PAGEDATA_NUM; n++)
+    {
+        SW_IIC_Write_Byte(data);
+        SW_IIC_WaitAck();
+    }
+    SW_IIC_Stop();
+}
+
+void SSD1306_Write(uint8_t controladdr, uint8_t data)
 {
     SW_IIC_Start();
     SW_IIC_Write_Byte(SSD1306_ADDRESS);
@@ -77,17 +144,18 @@ void SSD1306_Write(unsigned char controladdr, unsigned char data)
     SW_IIC_Stop();
 }
 
-void SSD1306_Write_Cmd(unsigned char data)
+void SSD1306_Write_Cmd(uint8_t data)
 {
     SSD1306_Write(0x00, data);
 }
 
-void SSD1306_Write_Data(unsigned char data)
+void SSD1306_Write_Data(uint8_t data)
 {
     SSD1306_Write(0x40, data);
 }
 
 #endif
+
 /**
  * @brief 初始化設定
  */
@@ -154,14 +222,14 @@ void SSD1306_Init(void)
 void IIC_Configuration(void)
 {
     /* Enable I2C0 module clock */
-	CLK_EnableModuleClock(I2C0_MODULE);
-	/* Configure the SDA0 & SCL0 of I2C0 pins */
-	SYS->P3_MFP &= ~(SYS_MFP_P34_Msk | SYS_MFP_P35_Msk);
-	SYS->P3_MFP |= (SYS_MFP_P34_SDA0 | SYS_MFP_P35_SCL0);
-	/* Open I2C0 module and set bus clock */
-	I2C_Open(I2CX, IIC_SPEED);
-	/* Get I2C0 Bus Clock */
-	// printf("I2C0 clock %d Hz\n", I2C_GetBusClockFreq(I2C0));
+    CLK_EnableModuleClock(I2C0_MODULE);
+    /* Configure the SDA0 & SCL0 of I2C0 pins */
+    SYS->P3_MFP &= ~(SYS_MFP_P34_Msk | SYS_MFP_P35_Msk);
+    SYS->P3_MFP |= (SYS_MFP_P34_SDA0 | SYS_MFP_P35_SCL0);
+    /* Open I2C0 module and set bus clock */
+    I2C_Open(I2CX, IIC_SPEED);
+    /* Get I2C0 Bus Clock */
+    // printf("I2C0 clock %d Hz\n", I2C_GetBusClockFreq(I2C0));
 }
 #elif (TRANSFER_METHOD == HW_SPI)
 

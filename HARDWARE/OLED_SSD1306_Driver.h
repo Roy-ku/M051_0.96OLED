@@ -86,9 +86,12 @@ typedef enum
 函式庫列表
 ********************************************************************************/
 void SSD1306_Init(void);
-void SSD1306_Write(unsigned char controladdr, unsigned char data);
-void SSD1306_Write_Cmd(unsigned char data);
-void SSD1306_Write_Data(unsigned char data);
+void SSD1306_Continuous_Write(uint8_t data);
+uint8_t HW_I2C_Continuous_WriteByte(I2C_T *i2c, uint8_t data);
+uint8_t HW_I2C_WriteByte(I2C_T *i2c, uint8_t controlAddr, uint8_t data);
+void SSD1306_Write(uint8_t controladdr, uint8_t data);
+void SSD1306_Write_Cmd(uint8_t data);
+void SSD1306_Write_Data(uint8_t data);
 void IIC_Configuration(void);
 void SW_IIC_Configuration(void);
 void SPI_Configuration(void);
