@@ -13,7 +13,7 @@
 #define HW_SPI (2) //目前無作用
 #define SW_SPI (3) //目前無作用
 
-#define TRANSFER_METHOD (SW_IIC)
+#define TRANSFER_METHOD (HW_IIC)
 
 #if (TRANSFER_METHOD == HW_IIC)
         #define SSD1306_ADDRESS (0x78) // 0x78和0x7A兩個地址 -- 默認0x78

@@ -212,6 +212,7 @@ void SSD1306_FILL(const uint8_t *BMP)
 #elif (MODE1 == 2)
 #if (TRANSFER_METHOD == HW_IIC)
         HW_I2C_Continuous_WriteByte(I2CX, page_buff);
+        page_buff = page_buff + SCREEN_PAGEDATA_NUM; //偏移128單位
 #elif (TRANSFER_METHOD == SW_IIC)
         SSD1306_Continuous_Write(page_buff);
         page_buff = page_buff + SCREEN_PAGEDATA_NUM; //偏移128單位
