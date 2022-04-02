@@ -41,18 +41,6 @@ void SSD1306_ShowStr(uint8_t x, uint8_t y, char ch[], uint8_t textsize)
             {
                 SSD1306_Write_Data(F6x8[c * 6 + i]);
             }
-
-            // SW_IIC_Start();
-            // SW_IIC_Write_Byte(SSD1306_ADDRESS);
-            // SW_IIC_WaitAck();
-            // SW_IIC_Write_Byte(0x40);
-            // SW_IIC_WaitAck();
-            // for (uint8_t i = 0; i < 6; i++)
-            // {
-            //     SW_IIC_Write_Byte(F6x8[c * 6 + i]);
-            //     SW_IIC_WaitAck();
-            // }
-            // SW_IIC_Stop();
             x += 6;
             j++;
         }

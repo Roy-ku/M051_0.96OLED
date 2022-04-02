@@ -64,7 +64,7 @@ void Demo1()
 	SSD1306_ShowStr(0, 5, "SW_IIC", SSD1306_TextSize_F6x8);
 #endif
 
-	SSD1306_ShowStr(0, 4, "Ver.007", SSD1306_TextSize_F6x8);
+	SSD1306_ShowStr(0, 4, "Ver.001", SSD1306_TextSize_F6x8);
 	SSD1306_ShowStr(64, 2, "0", SSD1306_TextSize_F8X16);
 
 	while (1)
