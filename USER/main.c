@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "M051Series.h"
-#include "OLED_SSD1306_Driver.h"
+#include "OLED_SSD1306_Config.h"
 #include "User_Delay.h"
 #include"Oled_bmp.h"
 uint16_t count = 0;
@@ -43,11 +43,9 @@ void Demo1()
 	Delay_ms(1000);
 
 	char CPU[] = "CPU: ", CoreClock[10];
-
 	sprintf(CoreClock, "%d", SystemCoreClock / 1000000);
 	strcat(CPU, CoreClock);
 	strcat(CPU, "MHZ");
-
 	SSD1306_Clear();
 	TIMER_Start(TIMER0);
 	uint16_t count = strlen(CPU);
@@ -64,7 +62,7 @@ void Demo1()
 	SSD1306_ShowStr(0, 5, "SW_IIC", SSD1306_TextSize_F6x8);
 #endif
 
-	SSD1306_ShowStr(0, 4, "Ver.001", SSD1306_TextSize_F6x8);
+	SSD1306_ShowStr(0, 4, "Ver.002", SSD1306_TextSize_F6x8);
 	SSD1306_ShowStr(64, 2, "0", SSD1306_TextSize_F8X16);
 
 	while (1)
