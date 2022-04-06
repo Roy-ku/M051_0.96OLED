@@ -8,24 +8,24 @@
 #include "OLED_SSD1306_Config.h"
 
 /*選擇通訊模式*/
-#define HW_IIC (0) //目前無作用
+#define HW_IIC (0)
 #define SW_IIC (1)
 #define HW_SPI (2) //目前無作用
 #define SW_SPI (3) //目前無作用
 
-#define TRANSFER_METHOD (HW_IIC)
+#define TRANSFER_METHOD (SW_IIC)
 
 #if (TRANSFER_METHOD == HW_IIC)
-        #define SSD1306_ADDRESS (0x78) // 0x78和0x7A兩個地址 -- 默認0x78
-        #define I2CX            I2C0
-        #define IIC_SPEED           400000
-#elif(TRANSFER_METHOD == SW_IIC)
-        #define SSD1306_ADDRESS (0x78) // 0x78和0x7A兩個地址 -- 默認0x78
-#elif(TRANSFER_METHOD == HW_SPI)
+#define SSD1306_ADDRESS (0x78) // 0x78和0x7A兩個地址 -- 默認0x78
+#define I2CX I2C0
+#define IIC_SPEED 400000
+#elif (TRANSFER_METHOD == SW_IIC)
+#define SSD1306_ADDRESS (0x78) // 0x78和0x7A兩個地址 -- 默認0x78
+#elif (TRANSFER_METHOD == HW_SPI)
 
-#elif(TRANSFER_METHOD == SW_SPI)
+#elif (TRANSFER_METHOD == SW_SPI)
 
-#endif
+#endif //TRANSFER_METHOD
 /********************************************************************************/
 
 /*選擇螢幕類型*/
@@ -69,18 +69,16 @@
 #define SCREEN_PHY_X ()
 #define SCREEN_PHY_Y ()
 #endif
-#endif
+#endif //SCREEN_TYPE
 /********************************************************************************/
 
-/*選擇字體大小*/
+/*字體大小*/
 typedef enum
 {
-        SSD1306_TextSize_F6x8 = 1,
-        SSD1306_TextSize_F8X16 = 2
+        SIZE_F6X8 = 1,
+        SIZE_F8X16 = 2
 } TEXTSIZE_TYPE;
 /********************************************************************************/
-
-
 
 /********************************************************************************
 函式庫列表

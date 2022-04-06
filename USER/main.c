@@ -3,7 +3,7 @@
 #include "M051Series.h"
 #include "OLED_SSD1306_Config.h"
 #include "User_Delay.h"
-#include"Oled_bmp.h"
+#include "Oled_bmp.h"
 uint16_t count = 0;
 
 ///////////////////////////////////////////////////////
@@ -37,7 +37,6 @@ void SYS_Init()
 ///////////////////////////////////////////////////////
 void Demo1()
 {
-	//extern uint8_t BMP1[];
 	//SSD1306_DrawBMP(0, 0, 128, 8, BMP1);
 	SSD1306_FILL(BMP1);
 	Delay_ms(1000);
@@ -55,22 +54,22 @@ void Demo1()
 	sprintf(I2C_Clock, "%d", I2C_GetBusClockFreq(I2C0) / 1000);
 	strcat(I2C_C, I2C_Clock);
 	strcat(I2C_C, "KHZ");
-	SSD1306_ShowStr(0, 5, "HW_IIC", SSD1306_TextSize_F6x8);
-	SSD1306_ShowStr(0, 7, I2C_C, SSD1306_TextSize_F6x8);
+	SSD1306_ShowStr(0, 5, "HW_IIC", SIZE_F6X8);
+	SSD1306_ShowStr(0, 7, I2C_C, SIZE_F6X8);
 #elif (TRANSFER_METHOD == SW_IIC)
 
-	SSD1306_ShowStr(0, 5, "SW_IIC", SSD1306_TextSize_F6x8);
+	SSD1306_ShowStr(0, 5, "SW_IIC", SIZE_F6X8);
 #endif
 
-	SSD1306_ShowStr(0, 4, "Ver.002", SSD1306_TextSize_F6x8);
-	SSD1306_ShowStr(64, 2, "0", SSD1306_TextSize_F8X16);
+	SSD1306_ShowStr(0, 4, "Ver.006", SIZE_F6X8);
+	SSD1306_ShowStr(64, 2, "0", SIZE_F8X16);
 
 	while (1)
 	{
 		for (uint8_t i = 0; i < 127 - count * 6; i++)
 		{
 			TIMER_Stop(TIMER0);
-			SSD1306_ShowStr(i, 0, CPU, SSD1306_TextSize_F6x8);
+			SSD1306_ShowStr(i, 0, CPU, SIZE_F6X8);
 			TIMER_Start(TIMER0);
 			Delay_ms(10);
 		}
@@ -78,8 +77,8 @@ void Demo1()
 		for (uint8_t i = 127 - count * 6; i > 0; i--)
 		{
 			TIMER_Stop(TIMER0);
-			SSD1306_ShowStr(i, 0, CPU, SSD1306_TextSize_F6x8);
-			SSD1306_ShowStr(i + count * 6, 0, " ", SSD1306_TextSize_F6x8);
+			SSD1306_ShowStr(i, 0, CPU, SIZE_F6X8);
+			SSD1306_ShowStr(i + count * 6, 0, " ", SIZE_F6X8);
 			TIMER_Start(TIMER0);
 			Delay_ms(10);
 		}
@@ -107,13 +106,14 @@ void TMR0_IRQHandler(void)
 {
 	if (TIMER_GetIntFlag(TIMER0) == 1)
 	{
-		char Count_num[10];
+		//char Count_num[10];
 		/* Clear Timer0 time-out interrupt flag */
 		TIMER_ClearIntFlag(TIMER0);
 		if (count == 20000)
 			count = 0;
-		sprintf(Count_num, "%d", count);
-		SSD1306_ShowStr(64, 2, Count_num, SSD1306_TextSize_F8X16);
+		//sprintf(Count_num, "%d", count);
+		//SSD1306_ShowStr(64, 2, Count_num, SIZE_F8X16);
+		SSD1306_ShowNum(64,2,count,SIZE_F8X16);
 		count++;
 	}
 }

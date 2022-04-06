@@ -22,15 +22,15 @@ void SSD1306_SetPos(uint8_t x, uint8_t y)
  */
 void SSD1306_ShowStr(uint8_t x, uint8_t y, char ch[], uint8_t textsize)
 {
-    uint8_t c = 0, j = 0;
+    uint8_t ascii_pos = 0, j = 0;
 
     switch (textsize)
     {
-    case SSD1306_TextSize_F6x8:
+    case SIZE_F6X8:
     {
         while (ch[j] != '\0')
         {
-            c = ch[j] - 32;
+            ascii_pos = ch[j] - 32;
             if (x >= 127)
             {
                 x = 0;
@@ -39,7 +39,7 @@ void SSD1306_ShowStr(uint8_t x, uint8_t y, char ch[], uint8_t textsize)
             SSD1306_SetPos(x, y);
             for (uint8_t i = 0; i < 6; i++)
             {
-                SSD1306_Write_Data(F6x8[c * 6 + i]);
+                SSD1306_Write_Data(F6x8[ascii_pos * 6 + i]);
             }
             x += 6;
             j++;
@@ -47,25 +47,29 @@ void SSD1306_ShowStr(uint8_t x, uint8_t y, char ch[], uint8_t textsize)
     }
     break;
 
-    case SSD1306_TextSize_F8X16:
+    case SIZE_F8X16:
     {
         while (ch[j] != '\0')
         {
-            c = ch[j] - 32;
+            ascii_pos = ch[j] - 32;
             if (x >= 127)
             {
                 x = 0;
                 // y++;
             }
+
+            /*上半*/
             SSD1306_SetPos(x, y);
             for (uint8_t i = 0; i < 8; i++)
             {
-                SSD1306_Write_Data(F8X16[c * 16 + i]);
+                SSD1306_Write_Data(F8X16[ascii_pos * 16 + i]);
             }
+
+            /*下半*/
             SSD1306_SetPos(x, y + 1);
             for (uint8_t i = 0; i < 8; i++)
             {
-                SSD1306_Write_Data(F8X16[c * 16 + i + 8]);
+                SSD1306_Write_Data(F8X16[ascii_pos * 16 + i + 8]);
             }
             x += 8;
             j++;
@@ -100,7 +104,7 @@ void SSD1306_ShowNum(uint8_t x, uint8_t y, unsigned int num, uint8_t TextSize)
 
     switch (TextSize)
     {
-    case 1:
+    case SIZE_F6X8:
     {
         while (count != 0)
         {
@@ -122,7 +126,7 @@ void SSD1306_ShowNum(uint8_t x, uint8_t y, unsigned int num, uint8_t TextSize)
     }
     break;
 
-    case 2:
+    case SIZE_F8X16:
     {
         while (count != 0)
         {
@@ -207,10 +211,9 @@ void SSD1306_Clear(void)
 {
 
 #if (SCREEN_TYPE == SSD1306_128x32)
-    page_len = 4;
+
 #elif (SCREEN_TYPE == SSD1306_128x64)
-                                                     // p = ScreenBuffer[0];
-                                                     // page_len = 8;
+
 #endif
     uint8_t page_buff[128] = {0x00};
     for (uint8_t i = 0; i < SCREEN_PAGE_NUM; i++)
@@ -218,40 +221,12 @@ void SSD1306_Clear(void)
         SSD1306_Write_Cmd(0xB0 + i); //設置頁地址（0~7）
         SSD1306_Write_Cmd(0x00);     //設置顯示位置—列低地址
         SSD1306_Write_Cmd(0x10);     //設置顯示位置—列高地址
-
-#define MODE (2)
-#if (MODE == 1)
-
-        for (uint8_t j = 0; j < 128; j++)
-        {
-            SSD1306_Write_Data(0x00);
-        }
-#elif (MODE == 2)
 #if (TRANSFER_METHOD == HW_IIC)
         HW_I2C_Continuous_WriteByte(I2CX, page_buff);
 #elif (TRANSFER_METHOD == SW_IIC)
         SSD1306_Continuous_Write(page_buff);
 #endif // TRANSFER_METHOD
-#endif // MODE
     }
-
-    // uint8_t *p;
-    //  SW_IIC_Start();
-    //  SW_IIC_Write_Byte(SSD1306_ADDRESS);
-    //  SW_IIC_WaitAck();
-    //  SW_IIC_Write_Byte(0x40);
-    //  SW_IIC_WaitAck();
-    //  for (unsigned int n = 0; n < 128 * 9; n++)//原始*8 會被吃掉一的PAGE
-    //  {
-    //  		if( n%128 ==0)
-    //  		{
-    //  			__NOP;
-    //  		}
-    //      SW_IIC_Write_Byte(*p++);
-    //      SW_IIC_WaitAck();
-    //  }
-
-    // SW_IIC_Stop();
 }
 
 /**
