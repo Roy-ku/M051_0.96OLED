@@ -548,7 +548,7 @@
       <file attr="config" category="sourceC" name="Device\M051\StdDriver\src\retarget.c" version="0.00.001">
         <instance index="0">RTE\Device\M058LDN\retarget.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Nuvoton" Cversion="0.00.001" condition="M0NuMicro M051 Device"/>
-        <package name="NuMicro_DFP" schemaVersion="1.2" url="http://www.nuvoton.com/hq/enu/Documents/KEILSoftwarePack" vendor="Nuvoton" version="1.3.10"/>
+        <package name="NuMicro_DFP" schemaVersion="1.2" url="https://github.com/OpenNuvoton/cmsis-packs/raw/master/" vendor="Nuvoton" version="1.3.14"/>
         <targetInfos>
           <targetInfo name="SSD1306"/>
         </targetInfos>
@@ -556,7 +556,7 @@
       <file attr="config" category="sourceAsm" condition="Compiler ARM" name="Device\M051\Source\ARM\startup_M051Series.s" version="0.00.001">
         <instance index="0">RTE\Device\M058LDN\startup_M051Series.s</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Nuvoton" Cversion="0.00.001" condition="M0NuMicro M051 Device"/>
-        <package name="NuMicro_DFP" schemaVersion="1.2" url="http://www.nuvoton.com/hq/enu/Documents/KEILSoftwarePack" vendor="Nuvoton" version="1.3.10"/>
+        <package name="NuMicro_DFP" schemaVersion="1.2" url="https://github.com/OpenNuvoton/cmsis-packs/raw/master/" vendor="Nuvoton" version="1.3.14"/>
         <targetInfos>
           <targetInfo name="SSD1306"/>
         </targetInfos>
@@ -564,7 +564,7 @@
       <file attr="config" category="source" name="Device\M051\Source\system_M051Series.c" version="0.00.001">
         <instance index="0">RTE\Device\M058LDN\system_M051Series.c</instance>
         <component Cclass="Device" Cgroup="Startup" Cvendor="Nuvoton" Cversion="0.00.001" condition="M0NuMicro M051 Device"/>
-        <package name="NuMicro_DFP" schemaVersion="1.2" url="http://www.nuvoton.com/hq/enu/Documents/KEILSoftwarePack" vendor="Nuvoton" version="1.3.10"/>
+        <package name="NuMicro_DFP" schemaVersion="1.2" url="https://github.com/OpenNuvoton/cmsis-packs/raw/master/" vendor="Nuvoton" version="1.3.14"/>
         <targetInfos>
           <targetInfo name="SSD1306"/>
         </targetInfos>
